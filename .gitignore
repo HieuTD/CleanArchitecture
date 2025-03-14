@@ -52,7 +52,4 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-.vs/CleanArchitecture/FileContentIndex/04ed16ee-877d-4ca9-9102-cf88c6dec698.vsidx
-.vs/CleanArchitecture/FileContentIndex/0f352ea3-c56c-49d1-8bbe-26c3db7adec8.vsidx
-.vs/CleanArchitecture/FileContentIndex/60476eb6-7d6d-4997-9cd9-d6e372045e18.vsidx
-.vs/CleanArchitecture/FileContentIndex/98202a42-49b4-4542-a82a-95d4026a32b4.vsidx
+/.vs
