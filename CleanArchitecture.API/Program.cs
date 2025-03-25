@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Interfaces.Repositories;
 using CleanArchitecture.Infrastructure.Repositories;
 using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Infrastructure.Services;
+using CleanArchitecture.Application.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);

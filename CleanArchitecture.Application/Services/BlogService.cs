@@ -11,7 +11,8 @@ using CleanArchitecture.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 
-namespace CleanArchitecture.Infrastructure.Services
+
+namespace CleanArchitecture.Application.Services
 {
     public class BlogService : IBlogService
     {
@@ -19,7 +20,7 @@ namespace CleanArchitecture.Infrastructure.Services
         private readonly IDatabase _cache;
         private readonly int _cacheExpirationMinutes;
 
-        public BlogService(IBlogRepository blogRepository, IConfiguration configuration) 
+        public BlogService(IBlogRepository blogRepository, IConfiguration configuration)
         {
             _blogRepository = blogRepository;
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]);
@@ -51,7 +52,7 @@ namespace CleanArchitecture.Infrastructure.Services
         public async Task DeleteBlogAsync(int id)
         {
             var blog = await _blogRepository.GetBlogByIdAsync(id);
-            if(blog == null)
+            if (blog == null)
             {
                 throw new Exception("Blog does not exist");
             }
@@ -89,7 +90,7 @@ namespace CleanArchitecture.Infrastructure.Services
 
         public async Task UpdateBlogAsync(int id, BlogCreateRequest request)
         {
-            var blog =  await _blogRepository.GetBlogByIdAsync(id);
+            var blog = await _blogRepository.GetBlogByIdAsync(id);
 
             blog.Description = request.Description;
             blog.Title = request.Title;

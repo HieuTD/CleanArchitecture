@@ -8,7 +8,7 @@ using CleanArchitecture.Application.Interfaces.Repositories;
 using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Infrastructure.Services
+namespace CleanArchitecture.Application.Services
 {
     public class BrandService : IBrandService
     {
