@@ -9,45 +9,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Infrastructure.Repositories
 {
-    public class BrandRepository : IBrandRepository
+    public class BrandRepository : GenericRepository<Brand> ,IBrandRepository
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public BrandRepository(ApplicationDbContext context)
+        public BrandRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task AddBrandAsync(Brand brand)
-        {
-            _context.Brands.Add(brand);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task AddBrandAsync(Brand brand)
+        //{
+        //    _context.Brands.Add(brand);
+        //    await _context.SaveChangesAsync();
+        //}
 
-        public async Task DeleteBrandAsync(Brand brand)
-        {
-            _context.Brands.Remove(brand);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task DeleteBrandAsync(Brand brand)
+        //{
+        //    _context.Brands.Remove(brand);
+        //    await _context.SaveChangesAsync();
+        //}
 
-        public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
-        {
-            return await _context.Brands
-                .Include(b => b.Products)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<Brand>> GetAllBrandsAsync()
+        //{
+        //    return await _context.Brands
+        //        .Include(b => b.Products)
+        //        .ToListAsync();
+        //}
 
-        public async Task<Brand> GetBrandByIdAsync(int id)
-        {
-            return await _context.Brands
-                .Include(b => b.Products)
-                .FirstOrDefaultAsync(b => b.Id == id);
-        }
+        //public async Task<Brand> GetBrandByIdAsync(int id)
+        //{
+        //    return await _context.Brands
+        //        .Include(b => b.Products)
+        //        .FirstOrDefaultAsync(b => b.Id == id);
+        //}
 
-        public async Task UpdateBrandAsync(Brand brand)
-        {
-            _context.Brands.Update(brand);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task UpdateBrandAsync(Brand brand)
+        //{
+        //    _context.Brands.Update(brand);
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }

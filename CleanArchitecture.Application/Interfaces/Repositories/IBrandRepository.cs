@@ -7,12 +7,12 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.Interfaces.Repositories
 {
-    public interface IBrandRepository
+    public interface IBrandRepository : IGenericRepository<Brand>
     {
-        Task<IEnumerable<Brand>> GetAllBrandsAsync();
-        Task<Brand> GetBrandByIdAsync(int id);
-        Task AddBrandAsync(Brand brand);
-        Task UpdateBrandAsync(Brand brand);
-        Task DeleteBrandAsync(Brand brand);
+        //Task<IEnumerable<Brand>> GetAllBrandsAsync();
+        //Task<Brand> GetBrandByIdAsync(int id);
+        //Task AddBrandAsync(Brand brand);
+        //Task UpdateBrandAsync(Brand brand);
+        //Task DeleteBrandAsync(Brand brand);
     }
 }

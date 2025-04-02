@@ -7,12 +7,12 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.Interfaces.Repositories
 {
-    public interface IBlogRepository
+    public interface IBlogRepository : IGenericRepository<Blog>
     {
-        Task<IEnumerable<Blog>> GetAllBlogsAsync();
-        Task<Blog> GetBlogByIdAsync(int id);
-        Task AddBlogAsync(Blog blog);
-        Task UpdateBlogAsync(Blog blog);
-        Task DeleteBlogAsync(Blog blog);
+        //Task<IEnumerable<Blog>> GetAllBlogsAsync();
+        //Task<Blog> GetBlogByIdAsync(int id);
+        //Task AddBlogAsync(Blog blog);
+        //Task UpdateBlogAsync(Blog blog);
+        //Task DeleteBlogAsync(Blog blog);
     }
 }

@@ -12,11 +12,13 @@ namespace CleanArchitecture.Application.Services
 {
     public class BrandService : IBrandService
     {
-        private readonly IBrandRepository _brandRepository;
+        //private readonly IBrandRepository _brandRepository;
+        public readonly IUnitOfWork _unitOfWork;
 
-        public BrandService(IBrandRepository brandRepository)
+        public BrandService(IBrandRepository brandRepository, IUnitOfWork unitOfWork)
         {
-            _brandRepository = brandRepository;
+            //_brandRepository = brandRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AddBrandAsync(BrandCreateRequest request)
@@ -24,24 +26,25 @@ namespace CleanArchitecture.Application.Services
             Brand brand = new Brand();
             brand.Name = request.BrandName;
             brand.CreatedAt = DateTime.Now;
-            await _brandRepository.AddBrandAsync(brand);
+            await _unitOfWork.BrandRepository.AddAsync(brand);
+            _unitOfWork.Save();
         }
 
         public async Task DeleteBrandAsync(int id)
         {
-            var brand = await _brandRepository.GetBrandByIdAsync(id);
+            var brand = await _unitOfWork.BrandRepository.GetByIdAsync(id);
 
             if (brand == null)
             {
                 throw new Exception("Brand doesn't exist");
             }
 
-            await _brandRepository.DeleteBrandAsync(brand);
+            _unitOfWork.BrandRepository.DeleteAsync(brand);
         }
 
         public async Task<IEnumerable<BrandViewModel>> GetAllBrandsAsync()
         {
-            var brands = await _brandRepository.GetAllBrandsAsync();
+            var brands = await _unitOfWork.BrandRepository.GetAllAsync();
 
             return brands.Select(b => new BrandViewModel
             {
@@ -52,7 +55,7 @@ namespace CleanArchitecture.Application.Services
 
         public async Task<BrandViewModel> GetBrandByIdAsync(int id)
         {
-            var brand = await _brandRepository.GetBrandByIdAsync(id);
+            var brand = await _unitOfWork.BrandRepository.GetByIdAsync(id);
             if (brand == null)
             {
                 throw new Exception("Brand doesn't exist");
@@ -66,7 +69,7 @@ namespace CleanArchitecture.Application.Services
 
         public async Task UpdateBrandeAsync(int id, BrandCreateRequest request)
         {
-            var brand = await _brandRepository.GetBrandByIdAsync(id);
+            var brand = await _unitOfWork.BrandRepository.GetByIdAsync(id);
 
             if (brand == null)
             {
@@ -76,7 +79,8 @@ namespace CleanArchitecture.Application.Services
             brand.UpdatedAt = DateTime.Now;
             brand.Name = request.BrandName;
 
-            await _brandRepository.UpdateBrandAsync(brand);
+            _unitOfWork.BrandRepository.UpdateAsync(brand);
+            _unitOfWork.Save();
         }
     }
 }

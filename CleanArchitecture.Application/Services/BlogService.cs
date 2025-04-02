@@ -16,13 +16,15 @@ namespace CleanArchitecture.Application.Services
 {
     public class BlogService : IBlogService
     {
-        private readonly IBlogRepository _blogRepository;
+        //private readonly IBlogRepository _blogRepository;
+        public IUnitOfWork _unitOfWork;
         private readonly IDatabase _cache;
         private readonly int _cacheExpirationMinutes;
 
-        public BlogService(IBlogRepository blogRepository, IConfiguration configuration)
+        public BlogService(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
-            _blogRepository = blogRepository;
+            //_blogRepository = blogRepository;
+            _unitOfWork = unitOfWork;
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]);
             _cache = redis.GetDatabase();
             _cacheExpirationMinutes = int.Parse(configuration["Redis:CacheExpirationMinutes"]);
@@ -46,19 +48,22 @@ namespace CleanArchitecture.Application.Services
                 };
             }
 
-            await _blogRepository.AddBlogAsync(blog);
+            await _unitOfWork.BlogRepository.AddAsync(blog);
+
+            _unitOfWork.Save();
         }
 
         public async Task DeleteBlogAsync(int id)
         {
-            var blog = await _blogRepository.GetBlogByIdAsync(id);
+            var blog = await _unitOfWork.BlogRepository.GetByIdAsync(id);
             if (blog == null)
             {
                 throw new Exception("Blog does not exist");
             }
             else
             {
-                await _blogRepository.DeleteBlogAsync(blog);
+                 _unitOfWork.BlogRepository.DeleteAsync(blog);
+                _unitOfWork.Save();
             }
         }
 
@@ -72,13 +77,13 @@ namespace CleanArchitecture.Application.Services
             {
                 return JsonSerializer.Deserialize<List<BlogViewModel>>(cachedData);
             }
-            var blogsRepo = await _blogRepository.GetAllBlogsAsync();
+            var blogsRepo = await _unitOfWork.BlogRepository.GetAllAsync();
 
             var blogs = blogsRepo.Select(b => new BlogViewModel
             {
                 Id = b.Id,
                 Description = b.Description,
-                UserName = b.AppUser.FirstName,
+                //UserName = b.AppUser.FirstName, (phai join _unitofWork.Appuser)
                 CreatedAt = DateTime.Now
             });
 
@@ -90,13 +95,14 @@ namespace CleanArchitecture.Application.Services
 
         public async Task UpdateBlogAsync(int id, BlogCreateRequest request)
         {
-            var blog = await _blogRepository.GetBlogByIdAsync(id);
+            var blog = await _unitOfWork.BlogRepository.GetByIdAsync(id);
 
             blog.Description = request.Description;
             blog.Title = request.Title;
             blog.UpdatedAt = DateTime.Now;
 
-            await _blogRepository.UpdateBlogAsync(blog);
+             _unitOfWork.BlogRepository.UpdateAsync(blog);
+            _unitOfWork.Save();
         }
     }
 }
