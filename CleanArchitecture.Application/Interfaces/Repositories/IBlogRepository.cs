@@ -14,5 +14,6 @@ namespace CleanArchitecture.Application.Interfaces.Repositories
         //Task AddBlogAsync(Blog blog);
         //Task UpdateBlogAsync(Blog blog);
         //Task DeleteBlogAsync(Blog blog);
+        Task<IEnumerable<Blog>> GetAllBlogsWithUserInfo();
     }
 }

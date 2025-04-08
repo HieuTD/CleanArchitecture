@@ -93,6 +93,32 @@ namespace CleanArchitecture.Application.Services
             return blogs;
         }
 
+        public async Task<IEnumerable<BlogViewModel>> GetAllBlogsWithUserInfo()
+        {
+            string cacheKey = "blog_list";
+            string cachedData = await _cache.StringGetAsync(cacheKey);
+
+            //Kiểm tra redis có sẵn dữ liệu blog không (với key = "blog_list") nếu có thì lấy từ redis, nếu không thì lấy từ repo
+            if (!String.IsNullOrEmpty(cachedData))
+            {
+                return JsonSerializer.Deserialize<List<BlogViewModel>>(cachedData);
+            }
+            var blogsRepo = await _unitOfWork.BlogRepository.GetAllBlogsWithUserInfo();
+
+            var blogs = blogsRepo.Select(b => new BlogViewModel
+            {
+                Id = b.Id,
+                Description = b.Description,
+                UserName = b.AppUser.FirstName,
+                CreatedAt = DateTime.Now
+            });
+
+            //Thêm dữ liệu vào redis (với key = "blog_list") | set thời gian tự động xóa cache sau 10' (_cacheExpirationMinutes)
+            await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(blogs), TimeSpan.FromMinutes(_cacheExpirationMinutes));
+
+            return blogs;
+        }
+
         public async Task UpdateBlogAsync(int id, BlogCreateRequest request)
         {
             var blog = await _unitOfWork.BlogRepository.GetByIdAsync(id);

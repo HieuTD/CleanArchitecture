@@ -23,6 +23,13 @@ namespace CleanArchitecture.API.Controllers
             return Ok(blogs);
         }
 
+        [HttpGet("blogwithuserinfo")]
+        public async Task<ActionResult<IEnumerable<BlogViewModel>>> GetAllBlogsWithUserInfo()
+        {
+            var blogs = await _blogService.GetAllBlogsWithUserInfo();
+            return Ok(blogs);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddBlog([FromForm] BlogCreateRequest request)
         {

@@ -16,6 +16,14 @@ namespace CleanArchitecture.Infrastructure.Repositories
         {
         }
 
+        public async Task<IEnumerable<Blog>> GetAllBlogsWithUserInfo()
+        {
+            return await _dbContext.Blogs
+                .Include(b => b.BlogImages)
+                .Include(b => b.AppUser)
+                .ToListAsync();
+        }
+
         //public async Task AddBlogAsync(Blog blog)
         //{
         //    _context.Blogs.Add(blog);

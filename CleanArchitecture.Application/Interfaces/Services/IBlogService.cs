@@ -13,5 +13,7 @@ namespace CleanArchitecture.Application.Interfaces.Services
         Task AddBlogAsync(BlogCreateRequest request);
         Task UpdateBlogAsync(int id, BlogCreateRequest request);
         Task DeleteBlogAsync(int id);
+        Task<IEnumerable<BlogViewModel>> GetAllBlogsWithUserInfo();
+
     }
 }
