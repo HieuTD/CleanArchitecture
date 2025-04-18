@@ -1,0 +1,31 @@
+name: Restore and Build .NET Project
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  restore_and_build:
+    name: Restore and Build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET 8 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore packages
+      run: |
+        echo "Restoring packages..."
+        dotnet restore
+
+    - name: Build project
+      run: |
+        echo "Building project..."
+        dotnet build --configuration Release
