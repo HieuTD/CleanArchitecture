@@ -72,7 +72,7 @@ namespace CleanArchitecture.Application.Services
             string cacheKey = "blog_list";
             string cachedData = await _cache.StringGetAsync(cacheKey);
 
-            //Kiểm tra redis có sẵn dữ liệu blog không (với key = "blog_list") nếu có thì lấy từ redis, nếu không thì lấy từ repo
+            //Kiểm tra redis có sẵn dữ liệu blog không(với key = "blog_list") nếu có thì lấy từ redis, nếu không thì lấy từ repo
             if (!String.IsNullOrEmpty(cachedData))
             {
                 return JsonSerializer.Deserialize<List<BlogViewModel>>(cachedData);
@@ -83,7 +83,6 @@ namespace CleanArchitecture.Application.Services
             {
                 Id = b.Id,
                 Description = b.Description,
-                //UserName = b.AppUser.FirstName, (phai join _unitofWork.Appuser)
                 CreatedAt = DateTime.Now
             });
 
@@ -95,14 +94,14 @@ namespace CleanArchitecture.Application.Services
 
         public async Task<IEnumerable<BlogViewModel>> GetAllBlogsWithUserInfo()
         {
-            string cacheKey = "blog_list";
-            string cachedData = await _cache.StringGetAsync(cacheKey);
+            //string cacheKey = "blog_list";
+            //string cachedData = await _cache.StringGetAsync(cacheKey);
 
             //Kiểm tra redis có sẵn dữ liệu blog không (với key = "blog_list") nếu có thì lấy từ redis, nếu không thì lấy từ repo
-            if (!String.IsNullOrEmpty(cachedData))
-            {
-                return JsonSerializer.Deserialize<List<BlogViewModel>>(cachedData);
-            }
+            //if (!String.IsNullOrEmpty(cachedData))
+            //{
+            //    return JsonSerializer.Deserialize<List<BlogViewModel>>(cachedData);
+            //}
             var blogsRepo = await _unitOfWork.BlogRepository.GetAllBlogsWithUserInfo();
 
             var blogs = blogsRepo.Select(b => new BlogViewModel
@@ -114,7 +113,7 @@ namespace CleanArchitecture.Application.Services
             });
 
             //Thêm dữ liệu vào redis (với key = "blog_list") | set thời gian tự động xóa cache sau 10' (_cacheExpirationMinutes)
-            await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(blogs), TimeSpan.FromMinutes(_cacheExpirationMinutes));
+            //await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(blogs), TimeSpan.FromMinutes(_cacheExpirationMinutes));
 
             return blogs;
         }

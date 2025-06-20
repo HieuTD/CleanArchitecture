@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  webapp:
+    container_name: cleanarch_api
+    build:
+      context: .
+      dockerfile: CleanArchitecture.API/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=V001633;Database=ĐATN_Hieu;User Id=sa;Password=hieu@123;TrustServerCertificate=True;Encrypt=False;
+
+  db:
+    container_name: sql_server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=hieu@123
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
