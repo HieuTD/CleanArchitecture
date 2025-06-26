@@ -18,14 +18,17 @@ namespace CleanArchitecture.Application.Services
     {
         //private readonly IBlogRepository _blogRepository;
         public IUnitOfWork _unitOfWork;
+        private readonly ConnectionMultiplexer _redis;
         private readonly IDatabase _cache;
         private readonly int _cacheExpirationMinutes;
 
-        public BlogService(IUnitOfWork unitOfWork, IConfiguration configuration)
+        public BlogService(IUnitOfWork unitOfWork, IConfiguration configuration, ConnectionMultiplexer redis)
         {
             //_blogRepository = blogRepository;
             _unitOfWork = unitOfWork;
-            var redis = ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]);
+            //Register in Program.cs
+            //var redis = ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]);
+            _redis = redis;
             _cache = redis.GetDatabase();
             _cacheExpirationMinutes = int.Parse(configuration["Redis:CacheExpirationMinutes"]);
         }

@@ -6,6 +6,8 @@ using CleanArchitecture.Infrastructure.Repositories;
 using CleanArchitecture.Application.Interfaces.Services;
 using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.Application.Services;
+using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,11 +20,25 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-builder.Services.AddScoped<IBlogService, BlogService>();
+//Register Redis connect
+builder.Services.AddSingleton<ConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration["Redis:ConnectionString"], true);
 
+    configuration.ResolveDns = true;
+
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+//Register UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//Register Repositories
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+
+//Register Services
+builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 
 var app = builder.Build();
